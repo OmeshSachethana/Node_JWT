@@ -1,6 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const authRoutes = require('./routes/auth');
+const authenticateToken = require('./middleware/auth');
 
 dotenv.config();
 const app = express();
@@ -11,6 +13,13 @@ app.use(express.json());
 // Basic route to test the server
 app.get('/', (req, res) => {
   res.send('JWT Auth Backend is running...');
+});
+
+app.use('/api/auth', authRoutes);
+
+// Protected route example
+app.get('/api/protected', authenticateToken, (req, res) => {
+  res.json({ message: 'This is a protected route', user: req.user });
 });
 
 // MongoDB connection
